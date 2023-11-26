@@ -14,11 +14,12 @@ bytemuck = "1"
 [features]
 default = []
 
-# When compiling for the ARM architecture, this feature will replace some parts
-# of the crate with inline assembly best suited to the ARM7TDMI CPU. Even with
-# this feature active the code will still work on later ARM CPUs, but with a
-# small speed loss because of different instruction scheduling.
-arm7tdmi = []
+# When active and with an ARM target, the implementation uses inline assembly
+# with instructions ordered to favor ARMv4T CPUs. Currently this will cause a
+# build error on any ARM target that defaults to Thumb code and that doesn't
+# support interworking (cfg can't yet detect this specific case, unfortunately).
+# This feature has no effect on non-ARM targets.
+armv4t = []
 
 # Causes functions to declare a `link_section` prefixed with `.iwram.`, which is
 # intended for when you're using these functions on the GBA. If you're using

@@ -9,12 +9,12 @@ pub type mu_u8 = MaybeUninit<u8>;
 pub type mu_u16 = MaybeUninit<u16>;
 pub type mu_u32 = MaybeUninit<u32>;
 
-macro_rules! cfg_arm7tdmi {
+macro_rules! cfg_armv4t {
   ( yes: { $($yes_tokens:tt)* } no: { $($no_tokens:tt)* } ) => {
-    #[cfg(all(target_arch="arm", feature="arm7tdmi"))]{
+    #[cfg(all(target_arch="arm", feature="armv4t"))]{
       $($yes_tokens)*
     }
-    #[cfg(not(all(target_arch="arm", feature="arm7tdmi")))]{
+    #[cfg(not(all(target_arch="arm", feature="armv4t")))]{
       $($no_tokens)*
     }
   }
@@ -32,11 +32,20 @@ macro_rules! cfg_arm7tdmi {
 ///   * `src` is *greater* than `dest` (a partial overlap).
 #[inline]
 #[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u8_forward")]
+#[cfg_attr(
+  all(target_arch = "arm", target_feature = "thumb-mode", feature = "armv4t"),
+  instruction_set(arm::a32)
+)]
 pub unsafe extern "C" fn copy_u8_forward(
   mut dest: *mut mu_u8, mut src: *const mu_u8, mut count: usize,
 ) {
-  cfg_arm7tdmi! {
+  cfg_armv4t! {
     yes: {
+      // This loop assumes that the count is non-zero to start, and so it does
+      // the subtract followed by a conditional copy and continue.
+      // * Pro: 8 bytes less code in the binary
+      // * Pro: save 2 cycles on non-zero sized copies
+      // * Con: lose 3 cycles on zero sized copies.
       core::arch::asm! {
         "1:",
         "subs    {count}, {count}, #1",
@@ -51,6 +60,8 @@ pub unsafe extern "C" fn copy_u8_forward(
       }
     }
     no: {
+      // When we write the loop as Rust, LLVM will generally test for 0 and
+      // early return, then copy and subtract and continue.
       while count > 0 {
         *dest = *src;
         dest = dest.add(1);
