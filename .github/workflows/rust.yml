@@ -24,7 +24,7 @@ jobs:
       run: cargo test
     
     - name: Run miri tests (x86_64)
-      run: cargo miri test
+      run: cargo +nightly miri test
     
     - name: Run cross tests (arm)
       run: cross test --target arm-unknown-linux-gnueabi
