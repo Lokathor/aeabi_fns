@@ -116,6 +116,8 @@ pub unsafe extern "C" fn copy_u8_backward(
       // When we write the loop as Rust, LLVM will generally test for 0 and
       // early return, then copy and subtract and continue.
       while count > 0 {
+        // IMPORTANT: in the backward loop we subtract *before* the copy,
+        // instead of after the copy like the forward loop does.
         dest = dest.sub(1);
         src = src.sub(1);
         *dest = *src;
