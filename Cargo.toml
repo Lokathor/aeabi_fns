@@ -1,0 +1,26 @@
+[package]
+name = "aeabi_fns"
+version = "0.1.0"
+edition = "2021"
+license = "Zlib OR Apache-2.0 OR MIT"
+
+[dependencies]
+# none!
+
+[dev-dependencies]
+getrandom = "0.2"
+bytemuck = "1"
+
+[features]
+default = []
+
+# When compiling for the ARM architecture, this feature will replace some parts
+# of the crate with inline assembly best suited to the ARM7TDMI CPU. Even with
+# this feature active the code will still work on later ARM CPUs, but with a
+# small speed loss because of different instruction scheduling.
+arm7tdmi = []
+
+# Causes functions to declare a `link_section` prefixed with `.iwram.`, which is
+# intended for when you're using these functions on the GBA. If you're using
+# this crate elsewhere the extra `link_section` attribute may cause problems.
+link_iwram = []
