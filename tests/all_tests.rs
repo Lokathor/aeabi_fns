@@ -186,7 +186,7 @@ fn test_copy_u8_backward() {
   }
 }
 
-//#[test]
+#[test]
 fn test_copy_u16_forward() {
   let mut lcg = Lcg::new();
 
@@ -266,7 +266,7 @@ fn test_copy_u16_forward() {
   }
 }
 
-//#[test]
+#[test]
 fn test_copy_u16_backward() {
   let mut lcg = Lcg::new();
 
@@ -283,15 +283,15 @@ fn test_copy_u16_backward() {
         // assume `copy_u8_backward` works and use it so we can have odd lengths
         unsafe {
           copy_u8_backward(
-            dest_expected.as_mut_ptr().add(d_start).add(len).cast(),
-            src.as_ptr().add(s_start).add(len).cast(),
+            dest_expected.as_mut_ptr().add(48).sub(d_start).cast(),
+            src.as_ptr().add(48).sub(s_start).cast(),
             len,
           )
         }
         unsafe {
           copy_u16_backward(
-            dest_actual.as_mut_ptr().add(d_start).add(len).cast(),
-            src.as_ptr().add(s_start).add(len).cast(),
+            dest_actual.as_mut_ptr().add(48).sub(d_start).cast(),
+            src.as_ptr().add(48).sub(s_start).cast(),
             len,
           )
         }
@@ -307,11 +307,7 @@ fn test_copy_u16_backward() {
       let mut new = base.clone();
       unsafe {
         let p = new.as_mut_ptr();
-        copy_u16_backward(
-          p.add(s).add(len).cast(),
-          p.add(s).add(len).cast(),
-          len,
-        )
+        copy_u16_backward(p.add(48).sub(s).cast(), p.add(48).sub(s).cast(), len)
       }
       assert_eq!(base, new);
     }
@@ -319,7 +315,7 @@ fn test_copy_u16_backward() {
 
   // src > dest works even when the regions overlap
   for len in 0..=16_usize {
-    let src = rand_bytes(64);
+    let src = rand_halfwords(64);
     for s in 0..len {
       for d in 0..len {
         if s > d {
@@ -334,16 +330,16 @@ fn test_copy_u16_backward() {
         unsafe {
           let p = out_expected.as_mut_ptr();
           copy_u8_backward(
-            p.add(d_start).add(len).cast(),
-            p.add(s_start).add(len).cast(),
+            p.add(48).sub(d_start).cast(),
+            p.add(48).sub(s_start).cast(),
             len,
           )
         }
         unsafe {
           let p = out_actual.as_mut_ptr();
           copy_u16_backward(
-            p.add(d_start).add(len).cast(),
-            p.add(s_start).add(len).cast(),
+            p.add(48).sub(d_start).cast(),
+            p.add(48).sub(s_start).cast(),
             len,
           )
         }
