@@ -10,10 +10,16 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  plain_test:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run tests (x86_64)
+      run: cargo test
 
+  miri_test:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -23,14 +29,16 @@ jobs:
     - name: Add miri component
       run: rustup component add miri
     
+    - name: Run miri tests (x86_64)
+      run: cargo miri test
+
+  cross_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
     - name: install cross-rs
       run: cargo install cross --git https://github.com/cross-rs/cross
-    
-    - name: Run tests (x86_64)
-      run: cargo test
-    
-    - name: Run miri tests (x86_64)
-      run: cargo +nightly miri test
     
     - name: Run cross tests (arm)
       run: cross test --target arm-unknown-linux-gnueabi
