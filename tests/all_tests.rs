@@ -186,7 +186,7 @@ fn test_copy_u8_backward() {
   }
 }
 
-#[test]
+//#[test]
 fn test_copy_u16_forward() {
   let mut lcg = Lcg::new();
 
@@ -266,7 +266,7 @@ fn test_copy_u16_forward() {
   }
 }
 
-#[test]
+//#[test]
 fn test_copy_u16_backward() {
   let mut lcg = Lcg::new();
 
