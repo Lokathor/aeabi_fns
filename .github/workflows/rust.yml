@@ -17,6 +17,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Default to Nightly
+      run: rustup default nightly
+    
+    - name: Add miri component
+      run: rustup component add miri
+    
     - name: install cross-rs
       run: cargo install cross --git https://github.com/cross-rs/cross
     
