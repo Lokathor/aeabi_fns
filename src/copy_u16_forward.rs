@@ -22,7 +22,10 @@ use crate::*;
 pub unsafe extern "C" fn copy_u16_forward(
   mut dest: *mut mu_u16, mut src: *const mu_u16, mut count: usize,
 ) {
-  eprintln!("=== start count: {count}");
+  if count > 0 {
+    debug_assert!(dest as usize % 2 == 0, "dest must be aligned to 2!");
+    debug_assert!(src as usize % 2 == 0, "src must be aligned to 2!");
+  }
   cfg_armv4t! {
     yes: {
       // The loop reasoning here is similar to `copy_u8_forward`
@@ -48,9 +51,8 @@ pub unsafe extern "C" fn copy_u16_forward(
       }
     }
   }
-  eprintln!("post-loop count: {count}");
+  // The ASM loop will underflow the `count` in some cases, so we do a bit test.
   if (count & 1) != 0 {
-    eprintln!("copying 1 byte");
     let dest = dest.cast::<mu_u8>();
     let src = src.cast::<mu_u8>();
     *dest = *src;

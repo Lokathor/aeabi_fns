@@ -23,6 +23,10 @@ use crate::*;
 pub unsafe extern "C" fn copy_u16_backward(
   mut dest: *mut mu_u16, mut src: *const mu_u16, mut count: usize,
 ) {
+  if count > 0 {
+    debug_assert!(dest as usize % 2 == 0, "dest must be aligned to 2!");
+    debug_assert!(src as usize % 2 == 0, "src must be aligned to 2!");
+  }
   // IMPORTANT: in the backward loop we adjust the pointers *before* the copy,
   // instead of after the copy like the forward loop does.
   cfg_armv4t! {
@@ -50,6 +54,7 @@ pub unsafe extern "C" fn copy_u16_backward(
       }
     }
   }
+  // The ASM loop will underflow the `count` in some cases, so we do a bit test.
   if (count & 1) != 0 {
     let mut dest = dest.cast::<mu_u8>();
     let mut src = src.cast::<mu_u8>();
