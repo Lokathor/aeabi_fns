@@ -51,7 +51,8 @@ pub unsafe extern "C" fn copy_u16_forward(
       }
     }
   }
-  // The ASM loop will underflow the `count` in some cases, so we do a bit test.
+  // The ASM loop will always underflow the `count` value, so we do a bit test
+  // to check to test for when there's a 1-byte copy at the end.
   if (count & 1) != 0 {
     let dest = dest.cast::<mu_u8>();
     let src = src.cast::<mu_u8>();
