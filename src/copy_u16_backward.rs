@@ -31,7 +31,7 @@ pub unsafe extern "C" fn copy_u16_backward(
   // instead of after the copy like the forward loop does.
   cfg_armv4t! {
     yes: {
-      // The loop reasoning here is similar to `copy_u8_forward`
+      // The loop reasoning here is similar to `copy_u8_backward`
       core::arch::asm! {
         "1:",
         "subs    {count}, {count}, #2",
