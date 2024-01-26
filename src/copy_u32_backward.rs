@@ -15,6 +15,9 @@ use crate::*;
 ///   * The `src` and `dest` regions are entirely disjoint.
 ///   * `src` equals `dest` (there is exact overlap).
 ///   * `src` is *less* than `dest` (a partial overlap).
+/// * `count` may not exceed `isize::MAX as usize`. (All Rust allocations
+///   already follow this rule, but perhaps it's worth stating that it is an
+///   assumption of the function.)
 #[inline]
 #[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u8_backward")]
 #[cfg_attr(
