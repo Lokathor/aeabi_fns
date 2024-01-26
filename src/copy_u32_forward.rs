@@ -40,13 +40,13 @@ pub unsafe extern "C" fn copy_u32_forward(
         // temp = count << 31;
         // this puts bit 1 as the carry flag,
         // and bit 0 as the neg flag
-        "lsls     {temp}, {count}, #31",
+        "lsls    {temp}, {count}, #31",
         // if count bit 1 set, copy 2
-        "ldrhcs   {temp}, [{src}], #2",
-        "strhcs   {temp}, [{dest}], #2",
+        "ldrhcs  {temp}, [{src}], #2",
+        "strhcs  {temp}, [{dest}], #2",
         // if count bit 0 set, copy 1
-        "ldrbmi   {temp}, [{src}], #1",
-        "strbmi   {temp}, [{dest}], #1",
+        "ldrbmi  {temp}, [{src}], #1",
+        "strbmi  {temp}, [{dest}], #1",
 
         dest = inout(reg) dest,
         src = inout(reg) src,
