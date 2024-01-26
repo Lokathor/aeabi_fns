@@ -13,8 +13,11 @@ use crate::*;
 ///   * The `src` and `dest` regions are entirely disjoint.
 ///   * `src` equals `dest` (there is exact overlap).
 ///   * `src` is *greater* than `dest` (a partial overlap).
+/// * `count` may not exceed `isize::MAX as usize`. (All Rust allocations
+///   already follow this rule, but perhaps it's worth stating that it is an
+///   assumption of the function.)
 #[inline]
-#[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u8_forward")]
+#[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u16_forward")]
 #[cfg_attr(
   all(target_arch = "arm", target_feature = "thumb-mode", feature = "armv4t"),
   instruction_set(arm::a32)
@@ -51,7 +54,8 @@ pub unsafe extern "C" fn copy_u16_forward(
       }
     }
   }
-  // The ASM loop will underflow the `count` in some cases, so we do a bit test.
+  // The ASM loop will always underflow the `count` value, so we do a bit test
+  // to check to test for when there's a 1-byte copy at the end.
   if (count & 1) != 0 {
     let dest = dest.cast::<mu_u8>();
     let src = src.cast::<mu_u8>();

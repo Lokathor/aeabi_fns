@@ -5,9 +5,9 @@
 
 use core::mem::MaybeUninit;
 
-pub type mu_u8 = MaybeUninit<u8>;
-pub type mu_u16 = MaybeUninit<u16>;
-pub type mu_u32 = MaybeUninit<u32>;
+type mu_u8 = MaybeUninit<u8>;
+type mu_u16 = MaybeUninit<u16>;
+type mu_u32 = MaybeUninit<u32>;
 
 /// This macro makes it easy to pick between `armv4t`-specific inline asm and
 /// the Rust-only fallback version.
@@ -47,3 +47,9 @@ pub use copy_u16_forward::copy_u16_forward;
 
 mod copy_u16_backward;
 pub use copy_u16_backward::copy_u16_backward;
+
+mod copy_u32_forward;
+pub use copy_u32_forward::copy_u32_forward;
+
+mod copy_u32_backward;
+pub use copy_u32_backward::copy_u32_backward;
