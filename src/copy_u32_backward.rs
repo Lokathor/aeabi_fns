@@ -39,8 +39,8 @@ pub unsafe extern "C" fn copy_u32_backward(
       core::arch::asm! {
         "1:",
         "subs    {count}, {count}, #4",
-        "ldrhge  {temp}, [{src}, #-4]!",
-        "strhge  {temp}, [{dest}, #-4]!",
+        "ldrge   {temp}, [{src}, #-4]!",
+        "strge   {temp}, [{dest}, #-4]!",
         "bgt     1b",
 
         // temp = count << 31;
