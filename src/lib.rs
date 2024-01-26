@@ -50,3 +50,6 @@ pub use copy_u16_backward::copy_u16_backward;
 
 mod copy_u32_forward;
 pub use copy_u32_forward::copy_u32_forward;
+
+mod copy_u32_backward;
+pub use copy_u32_backward::copy_u32_backward;
