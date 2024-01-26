@@ -19,7 +19,7 @@ use crate::*;
 ///   already follow this rule, but perhaps it's worth stating that it is an
 ///   assumption of the function.)
 #[inline]
-#[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u8_backward")]
+#[cfg_attr(feature = "link_iwram", link_section = ".iwram.copy_u32_backward")]
 #[cfg_attr(
   all(target_arch = "arm", target_feature = "thumb-mode", feature = "armv4t"),
   instruction_set(arm::a32)
